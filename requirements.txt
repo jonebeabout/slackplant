@@ -1,0 +1,4 @@
+pyngrok==5.0.5
+slack_bolt==1.6.0
+selenium==3.141.0
+requests==2.22.0

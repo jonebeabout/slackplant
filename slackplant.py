@@ -116,7 +116,7 @@ class SlackPlant:
         say('Good test')
 
     @app.message("!command")
-    def message_command(self, message, say):
+    def message_command(message, say):
         cmd = (' '.join(message['text'].split(' ')[1:]))
         res = subprocess.check_output(f'{ps_path} {cmd}', shell=True).decode('utf-8')
         say(f"```{res}```")
